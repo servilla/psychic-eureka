@@ -51,9 +51,11 @@ def do_scan(environment, sites, filter, outfile, xpath):
                           + identifier + '/' + revision[0]
                     tree = etree.parse(url)
                     path = tree.findall(xpath)
+                    cnt = 0
                     if path:
-                        print('{pid}: xpath={xpath} count={cnt}'.format(
-                            pid=pid, xpath=xpath, cnt=len(path)), file=outfile)
+                        cnt = len(path)
+                    print('{pid}: xpath={xpath} count={cnt}'.format(
+                            pid=pid, xpath=xpath, cnt=cnt, file=outfile))
                     sys.stdout.flush()
                 except Exception as e:
                     logger.error(e)
