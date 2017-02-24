@@ -12,6 +12,8 @@
     1/28/17
 """
 
+from __future__ import print_function
+
 import logging
 
 """
@@ -30,7 +32,7 @@ import sys
 import getopt
 
 
-def do_scan(environment, sites, filter, xpath):
+def do_scan(environment, sites, filter, outfile, xpath):
     base_url = environment + '/package/'
     url = base_url + 'eml/'
     scopes = requests.get(url=url).text.split('\n')
@@ -51,7 +53,7 @@ def do_scan(environment, sites, filter, xpath):
                     path = tree.findall(xpath)
                     if path:
                         print('{pid}: xpath={xpath} count={cnt}'.format(
-                            pid=pid, xpath=xpath, cnt=len(path)))
+                            pid=pid, xpath=xpath, cnt=len(path)), file=outfile)
                     sys.stdout.flush()
                 except Exception as e:
                     logger.error(e)
@@ -130,7 +132,8 @@ def main(argv):
 
     xpath = args[0]
 
-    do_scan(environment=_env, sites=_sites, filter=_filter, xpath=xpath)
+    do_scan(environment=_env, sites=_sites, filter=_filter,
+            outfile=_out, xpath=xpath)
 
     return 0
 
