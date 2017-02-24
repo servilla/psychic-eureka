@@ -32,7 +32,10 @@ import sys
 import getopt
 
 
-def do_scan(environment, sites, filter, outfile, xpath):
+def do_scan(environment, sites, filter, outfile, xpath, quiet):
+    packages = 0
+    packages_with_element = 0
+    total_cnt = 0
     base_url = environment + '/package/'
     url = base_url + 'eml/'
     scopes = requests.get(url=url).text.split('\n')
@@ -41,8 +44,8 @@ def do_scan(environment, sites, filter, outfile, xpath):
     for scope in scopes:
         if scope in sites:
             url = base_url +  'eml/' + scope
-            identifers = requests.get(url=url).text.split('\n')
-            for identifier in identifers:
+            identifiers = requests.get(url=url).text.split('\n')
+            for identifier in identifiers:
                 url = base_url + 'eml/' + scope + '/' + identifier + filter
                 revision = requests.get(url=url).text.split('\n')
                 pid = scope + '.' + identifier + '.' + revision[0]
@@ -51,14 +54,23 @@ def do_scan(environment, sites, filter, outfile, xpath):
                           + identifier + '/' + revision[0]
                     tree = etree.parse(url)
                     path = tree.findall(xpath)
+                    packages += 1
                     cnt = 0
                     if path:
+                        packages_with_element += 1
                         cnt = len(path)
-                    print('{pid}: xpath={xpath} count={cnt}'.format(
-                            pid=pid, xpath=xpath, cnt=cnt, file=outfile))
-                    sys.stdout.flush()
+                    if not quiet:
+                        print('{pid}: xpath={xpath} count={cnt}'.format(
+                                pid=pid, xpath=xpath, cnt=cnt, file=outfile))
+                        sys.stdout.flush()
+                    total_cnt += cnt
                 except Exception as e:
                     logger.error(e)
+    print('Packages analyzed: {packages}'.format(packages=packages))
+    print('Packages with xpath \"{xpath}\": {packages_with_element}'.format(
+        xpath=xpath, packages_with_element=packages_with_element))
+    print('Number of xpath \"{xpath}\" elements: {total_cnt}'.format(
+        xpath=xpath, total_cnt=total_cnt))
 
 
 def site_list(str_list=None):
@@ -84,6 +96,7 @@ def main(argv):
             '[-L LTER only] ' \
             '[-E EDI only] ' \
             '[-n newest only] ' \
+            '[-q quiet]' \
             '[-o output file] ' \
             '<xpath>'
 
@@ -92,7 +105,7 @@ def main(argv):
         sys.exit(1)
 
     try:
-        opts, args = getopt.getopt(argv, 'LEne:s:o:')
+        opts, args = getopt.getopt(argv, 'LEnqe:s:o:')
     except getopt.GetoptError as e:
         logger.error('Unrecognized command line flag: {0}'.format(e))
         logger.error(usage)
@@ -102,6 +115,7 @@ def main(argv):
     _filter = ''
     _env = 'http://pasta.lternet.edu'
     _out = sys.stdout
+    _quiet = False
 
     for opt, arg in opts:
         if opt == '-h':
@@ -116,6 +130,8 @@ def main(argv):
                 _sites = EDI
         elif opt == '-n':
             _filter = '?filter=newest'
+        elif opt == '-q':
+            _quiet = True
         elif opt == '-e':
             if arg not in ('pasta', 'pasta-s', 'pasta-d'):
                 logger.error('Environment \"{arg}\" not recognized!'.format(
@@ -135,7 +151,7 @@ def main(argv):
     xpath = args[0]
 
     do_scan(environment=_env, sites=_sites, filter=_filter,
-            outfile=_out, xpath=xpath)
+            outfile=_out, xpath=xpath, quiet=_quiet)
 
     return 0
 
