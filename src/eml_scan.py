@@ -105,7 +105,7 @@ def main(argv):
         sys.exit(1)
 
     try:
-        opts, args = getopt.getopt(argv, 'LEnqe:s:o:')
+        opts, args = getopt.getopt(argv, 'LEhnqe:s:o:')
     except getopt.GetoptError as e:
         logger.error('Unrecognized command line flag: {0}'.format(e))
         logger.error(usage)
