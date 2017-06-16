@@ -127,7 +127,7 @@ def main():
                 revision = requests.get(url=base_url + '/eml/' + scope + '/' +
                                 identifier + '?filter=newest').text.split('\n')
                 pid = scope + '.' + identifier + '.' + revision[0]
-                print('Poking :{}'.format(pid))
+                print('Poking: {}'.format(pid))
                 metadata_url = base_url + '/metadata/eml/' + scope + '/' + \
                                identifier + '/' + revision[0]
                 eml = requests.get(url=metadata_url)
