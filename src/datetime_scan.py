@@ -35,13 +35,13 @@ def main():
     base_url = 'https://pasta.lternet.edu/package'
     scopes = requests.get(url=base_url + '/eml').text.split('\n')
     for scope in scopes:
-        if scope in sites.EDI:
-            identifers = requests.get(url=base_url + '/eml/' + scope).text.split('\n')
-            for identifier in identifers:
+        if scope in sites.LTER:
+            identifiers = requests.get(url=base_url + '/eml/' + scope).text.split('\n')
+            for identifier in identifiers:
                 revision = requests.get(url=base_url + '/eml/' + scope + '/' +
                                 identifier + '?filter=newest').text.split('\n')
                 pid = scope + '.' + identifier + '.' + revision[0]
-                #print('{}'.format(pid))
+                print('{}'.format(pid))
                 metadata_url = base_url + '/metadata/eml/' + scope + '/' + \
                                identifier + '/' + revision[0]
                 eml = requests.get(url=metadata_url)
