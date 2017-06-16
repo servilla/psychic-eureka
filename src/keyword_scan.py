@@ -137,7 +137,7 @@ def main():
                     for keywordSet in eml_tree.iter('keywordSet'):
                         keywords = keywordSet.findall('./keyword')
                         for keyword in keywords:
-                            if keyword is not None:
+                            if keyword.text is not None:
                                 word = keyword.text.lower()
                                 print('    {}'.format(word))
                                 if word in keys:
