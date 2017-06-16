@@ -20,7 +20,7 @@ logging.basicConfig(format='%(asctime)s %(levelname)s (%(name)s): %(message)s',
 logger = logging.getLogger('sites')
 
 
-LTER = (
+LTER = [
     'knb-lter-and',
     'knb-lter-arc',
     'knb-lter-bes',
@@ -49,11 +49,11 @@ LTER = (
     'knb-lter-sev',
     'knb-lter-sgs',
     'knb-lter-vcr',
-)
+]
 
-EDI = (
+EDI = [
     'edi',
-)
+]
 
 
 def main():
