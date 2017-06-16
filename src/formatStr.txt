@@ -1,6 +1,0 @@
-DD-WWW-YY, 1
-yyyy, 4
-yyyy-mm-dd, 3
-YYYY, 1
-M, 4
-YYYY-MM-DD, 1
