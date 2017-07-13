@@ -20,6 +20,8 @@ logging.basicConfig(format='%(asctime)s %(levelname)s (%(name)s): %(message)s',
 logger = logging.getLogger('sites')
 
 
+BASE_URL = 'https://pasta.lternet.edu'
+
 LTER = [
     'knb-lter-and',
     'knb-lter-arc',
